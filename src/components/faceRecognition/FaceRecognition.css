@@ -1,0 +1,10 @@
+.bounding-box {
+  position: absolute;
+  box-shadow: 0 0 0 5px #149df2 inset;
+  display: flex;
+}
+
+.bounding-box:hover {
+  cursor: pointer;
+  background-color: #149df263;
+}
