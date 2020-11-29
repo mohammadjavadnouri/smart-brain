@@ -7,7 +7,9 @@ import Navigation from "./components/navigation/Navigation";
 import Logo from "./components/logo/logo";
 import ImageLinkForm from "./components/imageLinkForm/ImageLinkForm";
 import Rank from "./components/rank/Rank";
-import FaceRecognition from "./components/faceRecognition/FaceRecognition"
+import FaceRecognition from "./components/faceRecognition/FaceRecognition";
+import Signin from "./components/signin/Signin";
+import Register from "./components/register/Register";
 
 
 const app = new Clarifai.App({
@@ -20,7 +22,9 @@ class App extends Component {
     this.state = {
       input: '',
       imageURL: '',
-      box: {}
+      box: {},
+      route: 'signin',
+      isSignedIn: false
     }
   }
 
@@ -55,6 +59,17 @@ class App extends Component {
       .catch(err => console.log(err))
   }
 
+  onRouteChange = (route) =>{
+    if (route === "signout"){
+      this.setState({isSignedIn: false})
+    }else if(route === "home"){
+      this.setState({isSignedIn: true})
+    }
+    this.setState({route: route});
+    console.log(this.route);
+    console.log(this.state.route);
+  }
+
   render(){
   return (
     <div className="App">
@@ -74,17 +89,28 @@ class App extends Component {
             	}}
           /> 
           */}
-      <Navigation />
+      <Navigation  onRouteChange={this.onRouteChange} isSignedIn={this.state.isSignedIn}/>
       <Logo />
-      <Rank />
-      <ImageLinkForm 
+      { this.state.route === 'home' 
+        ?
+        <div>
+        <Rank />
+        <ImageLinkForm 
         onInputChange={this.onInputChange} 
         onButtonSubmit={this.onButtonSubmit}
-      />
-      <FaceRecognition 
-        imageURL={this.state.imageURL}
-        box={this.state.box}
-      />
+        />
+        <FaceRecognition 
+          imageURL={this.state.imageURL}
+          box={this.state.box}
+        />
+        </div>
+        :
+        (this.state.route === 'signin' 
+        ?<Signin onRouteChange={this.onRouteChange} />
+        :<Register onRouteChange={this.onRouteChange} />
+         )
+        
+      }
     </div> 
   );
 }
